@@ -7,8 +7,6 @@ from components import *
 pygame.init()
 screen = pygame.display.set_mode((640,480))
 
-
-
 T = Shape([
     [
         [1,1,1],
