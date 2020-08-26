@@ -15,15 +15,6 @@ with open("shapes.json") as f:
     print(blocks)
     world.create_entity(Shape(blocks))
 
-def rotate_right(shape):
-    shape.current_rotation += 1
-    if shape.current_rotation >= len(shape.rotations):
-        shape.current_rotation = 0
-
-def rotate_left(shape):
-    shape.current_rotation -= 1
-    if shape.current_rotation < 0:
-        shape.current_rotation = len(shape.rotations)-1
 
 world.add_processor(DrawPieceProcessor())
 
