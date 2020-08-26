@@ -3,6 +3,11 @@ class Shape:
         self.rotations = rotations
         self.current_rotation = 0
         self.number_rotations = len(self.rotations)
+        self.height = len(self.rotations)
+        self.width = len(self.rotations[0])
+
+    def get_current_rotation(self):
+        return self.rotations[self.current_rotation]
 
     def rotate_right(shape):
         self.current_rotation += 1
