@@ -30,4 +30,19 @@ class DrawScreenProcessor(esper.Processor):
             for j in range(GRID_WIDTH):
                 pygame.draw.rect(self.screen, (255,255,255), (j*TILE_WIDTH, i*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT), 2)
 
-    
+class InputMapperProcessor(esper.Processor):
+    def process(self):
+        global event_queue
+        for event in pygame.event.get():
+            for ent, input in world.get_component(Input):
+                if event.type == pygame.KEYDOWN:
+                    action = self.lookup_binding(input.bindings, event.key)
+                    if action is not None:
+                        event_queue += action 
+                if event.type == pygame.KEYUP:
+                    action = self.lookup_binding(input.bindings, event.key)
+                    if action is not None and action in input.actions:
+                        event_queue.remove(action)
+
+    def lookup_binding(self, bindings, key, default=None):
+        return bindings.get(pygame.key.name(key), default)

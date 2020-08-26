@@ -18,3 +18,8 @@ class Shape:
         self.current_rotation -= 1
         if self.current_rotation < 0:
             self.current_rotation = self.number_rotations-1
+
+class Input:
+    def __init__(self, bindings):
+        self.bindings = bindings
+        self.actions = []

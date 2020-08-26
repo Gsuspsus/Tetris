@@ -15,6 +15,7 @@ with open("shapes.json") as f:
     world.create_entity(Shape(blocks))
 
 world.add_processor(DrawScreenProcessor())
+world.add_processor(InputMapperProcessor(), priority=2)
 
 while True:
     for event in pygame.event.get():
