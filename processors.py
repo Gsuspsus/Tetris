@@ -13,13 +13,13 @@ class DrawScreenProcessor(esper.Processor):
     def process(self):
         self.screen.fill((0,0,0))
         for ent, shape in world.get_component(Shape):
-            self.draw_shape(shape.rotations[shape.current_rotation])
+            self.draw_shape(shape)
         self.draw_grid_overlay()
 
     def draw_shape(self,shape):
-        for i in range(len(shape)):
-            for j in range(len(shape[0])):
-                if shape[i][j] == 1:
+        for i in range(shape.height):
+            for j in range(shape.width):
+                if shape.get_current_rotation()[i][j] == 1:
                     self.draw_block(j*TILE_WIDTH,i*TILE_HEIGHT, TILE_HEIGHT, TILE_WIDTH)
 
     def draw_block(self,x,y,height,width):
