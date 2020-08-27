@@ -1,3 +1,4 @@
+import pygame 
 from event_queue import EventQueue
 
 FPS = 60 
@@ -12,3 +13,4 @@ TILE_WIDTH = SCREEN_WIDTH/GRID_WIDTH
 TILE_HEIGHT = SCREEN_HEIGHT/GRID_HEIGHT
 
 event_queue = EventQueue()
+clock = pygame.time.Clock()

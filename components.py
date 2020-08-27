@@ -27,3 +27,21 @@ class Input:
     def __init__(self, bindings):
         self.bindings = bindings
         self.actions = []
+
+class GridPosition:
+    def __init__(self, x,y):
+        self.x = x
+        self.y = y
+
+class DeltaPosition:
+    def __init__(self, x,y):
+        self.x = x
+        self.y = y
+
+class Rotation:
+    def __init__(self, index):
+        self.index = index
+
+class Speed:
+    def __init__(self, amount):
+        self.amount = amount

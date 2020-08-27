@@ -13,16 +13,16 @@ class DrawScreenProcessor(esper.Processor):
     
     def process(self):
         self.screen.fill((0,0,0))
-        for ent, shape in world.get_component(Shape):
-            self.draw_shape(shape)
+        for ent, (shape, grid_pos) in world.get_components(Shape, GridPosition):
+            self.draw_shape(shape, grid_pos.x, grid_pos.y)
         self.draw_grid_overlay()
         pygame.display.update()
 
-    def draw_shape(self,shape):
+    def draw_shape(self,shape, x,y):
         for i in range(shape.get_height()):
             for j in range(shape.get_width()):
                 if shape.get_current_rotation()[i][j] == 1:
-                    self.draw_block(j*TILE_WIDTH,i*TILE_HEIGHT, TILE_HEIGHT, TILE_WIDTH)
+                    self.draw_block(x*TILE_WIDTH+j*TILE_WIDTH,y*TILE_HEIGHT+i*TILE_HEIGHT, TILE_HEIGHT, TILE_WIDTH)
 
     def draw_block(self,x,y,height,width):
         pygame.draw.rect(self.screen, (255,0,0), (x,y,width,height))
@@ -55,3 +55,12 @@ class InputProcessor(esper.Processor):
                 pygame.quit()
             elif 'ROTATE' in input.actions:
                 shape.rotate_right()
+
+class MovePieceProcessor(esper.Processor):
+    def process(self):
+        for ent, (grid_pos, delta_pos, speed) in world.get_components(GridPosition, DeltaPosition, Speed):
+            delta_pos.y += speed.amount * (clock.get_time() / 1000)
+            if delta_pos.y >= 1:
+                grid_pos.y += 1 
+                delta_pos.y = 0
+        
