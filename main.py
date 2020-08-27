@@ -10,21 +10,21 @@ from constants import FPS
 pygame.init()
 
 
-world.add_processor(DrawScreenProcessor())
-world.add_processor(InputMapperProcessor(), priority=2)
-world.add_processor(InputProcessor(), priority=1)
-world.add_processor(MovePieceProcessor())
+world.add_processor(DrawScreenProcessor(), priority=96)
+world.add_processor(InputMapperProcessor(), priority=100)
+world.add_processor(InputProcessor(), priority=99)
+world.add_processor(MovePieceProcessor(), priority=97)
+world.add_processor(LandPieceProcessor(), priority=98)
+world.add_processor(SpawnPieceProcessor(), priority=96)
 
 piece_name = random.choice(list(shapes))
 
-shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(4,0), DeltaPosition(0,0), Speed(0.5), Input(
-    {
-        'escape' : 'QUIT',
-        'w' : 'ROTATE',
-        "a" : 'MOVE_LEFT',
-        'd' : "MOVE_RIGHT"
-    }))
+global bindings
+shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(4,0), DeltaPosition(0,0), Speed(0.5), Input(bindings))
+
+global event_queue
 
 while True:
+    event_queue.clear()
     world.process()
     clock.tick(FPS)

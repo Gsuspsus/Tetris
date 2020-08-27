@@ -1,4 +1,5 @@
 import esper
+import random
 import sys
 import pygame 
 
@@ -9,12 +10,14 @@ from event_queue import EventQueue
 
 class DrawScreenProcessor(esper.Processor):
     def __init__(self):
-        self.screen = pygame.display.set_mode((640,480))
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     
     def process(self):
         self.screen.fill((0,0,0))
         for ent, (shape, grid_pos) in world.get_components(Shape, GridPosition):
             self.draw_shape(shape, grid_pos.x, grid_pos.y)
+
+        self.draw_grid()
         self.draw_grid_overlay()
         pygame.display.update()
 
@@ -24,9 +27,15 @@ class DrawScreenProcessor(esper.Processor):
                 if shape.get_current_rotation()[i][j] == 1:
                     self.draw_block(x*TILE_WIDTH+j*TILE_WIDTH,y*TILE_HEIGHT+i*TILE_HEIGHT, TILE_HEIGHT, TILE_WIDTH)
 
+    def draw_grid(self):
+        for i in range(GRID_HEIGHT):
+            for j in range(GRID_WIDTH):
+                if(grid[i][j] != 0):
+                    self.draw_block(j*TILE_WIDTH,i*TILE_HEIGHT,TILE_HEIGHT,TILE_WIDTH)
+
     def draw_block(self,x,y,height,width):
         pygame.draw.rect(self.screen, (255,0,0), (x,y,width,height))
-    
+
     def draw_grid_overlay(self):
         for i in range(GRID_HEIGHT):
             for j in range(GRID_WIDTH):
@@ -42,7 +51,7 @@ class InputMapperProcessor(esper.Processor):
                         input.actions.append(action)
                 if event.type == pygame.KEYUP:
                     action = self.lookup_binding(input.bindings, event.key)
-                    if action is not None:
+                    if action is not None and action in input.actions:
                         input.actions.remove(action)
 
     def lookup_binding(self, bindings, key, default=None):
@@ -67,6 +76,9 @@ class InputProcessor(esper.Processor):
                 if x+shape.get_width() <= GRID_WIDTH:
                     grid_pos.x = x
 
+            elif 'MOVE_DOWN' in input.actions:
+                grid_pos.y +=1 #GRID_HEIGHT - shape.get_height()
+
 class MovePieceProcessor(esper.Processor):
     def process(self):
         for ent, (grid_pos, delta_pos, speed) in world.get_components(GridPosition, DeltaPosition, Speed):
@@ -74,4 +86,24 @@ class MovePieceProcessor(esper.Processor):
             if delta_pos.y >= 1:
                 grid_pos.y += 1 
                 delta_pos.y = 0
-        
+
+class LandPieceProcessor(esper.Processor):
+    global event_queue
+    def process(self):
+        for ent, (grid_pos, shape) in world.get_components(GridPosition, Shape):
+            if grid_pos.y + shape.get_height() == GRID_HEIGHT:
+                for i in range(grid_pos.y, grid_pos.y + shape.get_height()):
+                    for j in range(grid_pos.x, grid_pos.x + shape.get_width()):
+                        if shape.get_current_rotation()[i-grid_pos.y][j-grid_pos.x] != 0:
+                            grid[i][j] = 1
+                            event_queue.add('SPAWN_NEW')
+                        
+                world.delete_entity(ent)
+
+class SpawnPieceProcessor(esper.Processor):
+    global event_queue
+    global bindings
+    def process(self):
+        if 'SPAWN_NEW' in event_queue.events:
+            piece_name = random.choice(list(shapes))
+            shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(4,0), DeltaPosition(0,0), Speed(0.5), Input(bindings))
