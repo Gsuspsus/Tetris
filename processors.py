@@ -17,8 +17,8 @@ class DrawScreenProcessor(esper.Processor):
         self.draw_grid_overlay()
 
     def draw_shape(self,shape):
-        for i in range(shape.height):
-            for j in range(shape.width):
+        for i in range(shape.get_height()):
+            for j in range(shape.get_width()):
                 if shape.get_current_rotation()[i][j] == 1:
                     self.draw_block(j*TILE_WIDTH,i*TILE_HEIGHT, TILE_HEIGHT, TILE_WIDTH)
 
@@ -41,8 +41,15 @@ class InputMapperProcessor(esper.Processor):
                         event_queue += action 
                 if event.type == pygame.KEYUP:
                     action = self.lookup_binding(input.bindings, event.key)
-                    if action is not None and action in input.actions:
+                    print(action)
+                    if action is not None:
                         event_queue.remove(action)
 
     def lookup_binding(self, bindings, key, default=None):
         return bindings.get(pygame.key.name(key), default)
+
+
+class RotateShapeProcessor(esper.Processor):
+    def process(self):
+        for ent, shape in world.get_component(Shape):
+            shape.rotate_right()

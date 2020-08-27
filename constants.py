@@ -1,5 +1,7 @@
 from event_queue import EventQueue
 
+FPS = 5 
+
 GRID_WIDTH = 10
 GRID_HEIGHT = 20
 
