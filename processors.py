@@ -50,11 +50,22 @@ class InputMapperProcessor(esper.Processor):
 
 class InputProcessor(esper.Processor):
     def process(self):
-        for ent, (input, shape) in world.get_components(Input,Shape):
+        for ent, (input, shape, grid_pos) in world.get_components(Input,Shape, GridPosition):
             if 'QUIT' in input.actions:
                 pygame.quit()
+                sys.exit()
             elif 'ROTATE' in input.actions:
                 shape.rotate_right()
+
+            elif 'MOVE_LEFT' in input.actions:
+                x = grid_pos.x - 1
+                if x > 0:
+                    grid_pos.x = x
+                
+            elif 'MOVE_RIGHT' in input.actions:
+                x = grid_pos.x + 1
+                if x < GRID_WIDTH - 1:
+                    grid_pos.x = x
 
 class MovePieceProcessor(esper.Processor):
     def process(self):
