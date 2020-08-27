@@ -59,12 +59,12 @@ class InputProcessor(esper.Processor):
 
             elif 'MOVE_LEFT' in input.actions:
                 x = grid_pos.x - 1
-                if x > 0:
+                if x >= 0:
                     grid_pos.x = x
                 
             elif 'MOVE_RIGHT' in input.actions:
                 x = grid_pos.x + 1
-                if x < GRID_WIDTH - 1:
+                if x+shape.get_width() <= GRID_WIDTH:
                     grid_pos.x = x
 
 class MovePieceProcessor(esper.Processor):

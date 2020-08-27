@@ -1,6 +1,5 @@
 import pygame
 import esper 
-import json 
 import random
 
 from components import *
@@ -10,8 +9,6 @@ from constants import FPS
 
 pygame.init()
 
-with open("shapes.json") as f:
-    shapes = json.load(f)
 
 world.add_processor(DrawScreenProcessor())
 world.add_processor(InputMapperProcessor(), priority=2)

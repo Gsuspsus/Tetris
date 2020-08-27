@@ -1,4 +1,5 @@
 import pygame 
+import json 
 from event_queue import EventQueue
 
 FPS = 60 
@@ -14,3 +15,7 @@ TILE_HEIGHT = SCREEN_HEIGHT/GRID_HEIGHT
 
 event_queue = EventQueue()
 clock = pygame.time.Clock()
+grid = [[0] * GRID_WIDTH for n in range(GRID_HEIGHT)]
+
+with open("shapes.json") as f:
+    shapes = json.load(f)
