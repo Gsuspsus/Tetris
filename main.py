@@ -17,10 +17,14 @@ with open("shapes.json") as f:
 
 world.add_processor(DrawScreenProcessor())
 world.add_processor(InputMapperProcessor(), priority=2)
+world.add_processor(InputProcessor(), priority=1)
 
 piece_name = random.choice(list(shapes))
 
-shape = world.create_entity(Shape(shapes[piece_name]), Input({'a' : 'ROTATE_LEFT'}) )
+shape = world.create_entity(Shape(shapes[piece_name]), Input(
+    {'escape' : 'QUIT',
+    'w' : 'ROTATE',
+    }) )
 
 while True:
     world.process()

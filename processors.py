@@ -48,8 +48,10 @@ class InputMapperProcessor(esper.Processor):
     def lookup_binding(self, bindings, key, default=None):
         return bindings.get(pygame.key.name(key), default)
 
-
-class RotateShapeProcessor(esper.Processor):
+class InputProcessor(esper.Processor):
     def process(self):
-        for ent, shape in world.get_component(Shape):
-            shape.rotate_right()
+        for ent, (input, shape) in world.get_components(Input,Shape):
+            if 'QUIT' in input.actions:
+                pygame.quit()
+            elif 'ROTATE' in input.actions:
+                shape.rotate_right()
