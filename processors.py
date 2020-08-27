@@ -1,4 +1,5 @@
 import esper
+import sys
 import pygame 
 
 from world import world
@@ -15,6 +16,7 @@ class DrawScreenProcessor(esper.Processor):
         for ent, shape in world.get_component(Shape):
             self.draw_shape(shape)
         self.draw_grid_overlay()
+        pygame.display.update()
 
     def draw_shape(self,shape):
         for i in range(shape.get_height()):
@@ -32,18 +34,16 @@ class DrawScreenProcessor(esper.Processor):
 
 class InputMapperProcessor(esper.Processor):
     def process(self):
-        global event_queue
         for event in pygame.event.get():
             for ent, input in world.get_component(Input):
                 if event.type == pygame.KEYDOWN:
                     action = self.lookup_binding(input.bindings, event.key)
                     if action is not None:
-                        event_queue += action 
+                        input.actions.append(action)
                 if event.type == pygame.KEYUP:
                     action = self.lookup_binding(input.bindings, event.key)
-                    print(action)
                     if action is not None:
-                        event_queue.remove(action)
+                        input.actions.remove(action)
 
     def lookup_binding(self, bindings, key, default=None):
         return bindings.get(pygame.key.name(key), default)
