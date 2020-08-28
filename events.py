@@ -1,0 +1,2 @@
+class SpawnNewPieceEvent:
+    pass 

@@ -7,6 +7,7 @@ from world import world
 from constants import *
 from components import *
 from event_queue import EventQueue
+from events import *
 
 class DrawScreenProcessor(esper.Processor):
     def __init__(self):
@@ -88,7 +89,6 @@ class MovePieceProcessor(esper.Processor):
                 delta_pos.y = 0
 
 class LandPieceProcessor(esper.Processor):
-    global event_queue
     def process(self):
         for ent, (grid_pos, shape) in world.get_components(GridPosition, Shape):
             if grid_pos.y + shape.get_height() == GRID_HEIGHT:
@@ -96,14 +96,12 @@ class LandPieceProcessor(esper.Processor):
                     for j in range(grid_pos.x, grid_pos.x + shape.get_width()):
                         if shape.get_current_rotation()[i-grid_pos.y][j-grid_pos.x] != 0:
                             grid[i][j] = 1
-                            event_queue.add('SPAWN_NEW')
+                            event_queue.add(SpawnNewPieceEvent())
                         
                 world.delete_entity(ent)
 
 class SpawnPieceProcessor(esper.Processor):
-    global event_queue
-    global bindings
     def process(self):
-        if 'SPAWN_NEW' in event_queue.events:
+        if event_queue.has_event(SpawnNewPieceEvent):
             piece_name = random.choice(list(shapes))
             shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(4,0), DeltaPosition(0,0), Speed(0.5), Input(bindings))
