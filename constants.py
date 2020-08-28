@@ -13,6 +13,9 @@ SCREEN_HEIGHT = 400
 TILE_WIDTH = SCREEN_WIDTH/GRID_WIDTH
 TILE_HEIGHT = SCREEN_HEIGHT/GRID_HEIGHT
 
+LEFT_BOUDNARY = 0
+RIGHT_BOUNDARY = 1
+
 event_queue = EventQueue()
 clock = pygame.time.Clock()
 grid = [[0] * GRID_WIDTH for n in range(GRID_HEIGHT)]
