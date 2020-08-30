@@ -46,7 +46,6 @@ class Rotation:
     def __init__(self, index):
         self.index = index
 
-
 class Speed:
     def __init__(self, amount):
         self.amount = amount

@@ -13,7 +13,7 @@ from events import *
 class DrawScreenProcessor(esper.Processor):
     def __init__(self):
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
+        self.font = pygame.font.SysFont('Comic Sans MS', 30)
     def process(self):
         self.screen.fill((0, 0, 0))
         for ent, (shape, grid_pos) in world.get_components(Shape, GridPosition):
@@ -21,6 +21,7 @@ class DrawScreenProcessor(esper.Processor):
 
         self.draw_grid()
         self.draw_grid_overlay()
+        self.draw_score()
         pygame.display.update()
 
     def draw_shape(self, shape, x, y):
@@ -45,6 +46,10 @@ class DrawScreenProcessor(esper.Processor):
             for j in range(GRID_WIDTH):
                 pygame.draw.rect(self.screen, (255, 255, 255),
                                  (j*TILE_WIDTH, i*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT), 2)
+
+    def draw_score(self):
+       textsurface = self.font.render(str(score), False, (0, 255, 0))
+       self.screen.blit(textsurface,(0,GAME_WINDOW_HEIGHT))
 
 class InputMapperProcessor(esper.Processor):
     def process(self):
@@ -137,6 +142,12 @@ class SpawnPieceProcessor(esper.Processor):
             shape = world.create_entity(Shape(shapes["O"]), GridPosition(
                 4, 0), DeltaPosition(0, 0), Speed(0.5), Input(bindings))
 
+class ScoreProcessor(esper.Processor):
+    def process(self):
+        global score
+        if event_queue.has_event(LineCleared):
+            score += 1
+
 class ClearLineProcessor(esper.Processor):
     def process(self):
         line = None
@@ -152,6 +163,7 @@ class ClearLineProcessor(esper.Processor):
 
         if line is not None:
             self.move_lines_down(line)
+            event_queue.add(LineCleared())
 
     def move_lines_down(self, target_line):
         above_rows = [[0] * GRID_WIDTH for n in range(target_line)] 

@@ -5,3 +5,6 @@ class SpawnNewPieceEvent:
 class BoundaryHitEvent:
     def __init__(self, side):
         self.side = side
+
+class LineCleared:
+    pass
