@@ -9,7 +9,7 @@ from constants import FPS
 
 pygame.init()
 
-world.add_processor(DrawScreenProcessor(), priority=96)
+world.add_processor(DrawScreenProcessor(), priority=1)
 world.add_processor(InputMapperProcessor(), priority=100)
 world.add_processor(InputProcessor(), priority=99)
 world.add_processor(MovePieceProcessor(), priority=93)
@@ -21,7 +21,7 @@ world.add_processor(ScoreProcessor(), priority=90)
 world.add_processor(GameOverProcessor(), priority=120)
 
 piece_name = random.choice(list(shapes))
-shape = world.create_entity(Shape(shapes[piece_name])s GridPosition(4,0), DeltaPosition(0,0), Speed(0.5), Input(bindings))
+shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(4,0), DeltaPosition(0,0), Speed(0.5), Input(bindings))
 
 while True:
     event_queue.clear()

@@ -9,7 +9,6 @@ from components import *
 from event_queue import EventQueue
 from events import *
 
-
 class DrawScreenProcessor(esper.Processor):
     def __init__(self):
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -22,6 +21,7 @@ class DrawScreenProcessor(esper.Processor):
         self.draw_grid()
         self.draw_grid_overlay()
         self.draw_score()
+        self.draw_next_up()
         pygame.display.update()
 
     def draw_shape(self, shape, x, y):
@@ -50,7 +50,16 @@ class DrawScreenProcessor(esper.Processor):
     def draw_score(self):
        textsurface = self.font.render(str(score), False, (0, 255, 0))
        self.screen.blit(textsurface,(GAME_WINDOW_WIDTH//2-textsurface.get_width()//2,0))
-    
+
+    def draw_next_up(self):
+        shape = Shape(shapes[bag.next()])
+        for i in range(shape.get_height()):
+            for j in range(shape.get_width()):
+                if shape.get_current_rotation()[i][j] == 1:
+                    self.draw_block(
+                        j*TILE_WIDTH+GAME_WINDOW_WIDTH+INFO_AREA_WIDTH//2, i*TILE_HEIGHT+SCREEN_HEIGHT//3, TILE_HEIGHT,TILE_HEIGHT)
+
+
 class InputMapperProcessor(esper.Processor):
     def process(self):
         for event in pygame.event.get():
@@ -151,26 +160,14 @@ class LandPieceProcessor(esper.Processor):
 
 
 class SpawnPieceProcessor(esper.Processor):
-    def __init__(self):
-        self.bag_inventory = list(shapes)
-        self.bag = self.bag_inventory.copy()
-
     def process(self):
         if event_queue.has_event(SpawnNewPieceEvent):
-            if len(self.bag) == 0:
-                print("empty")
-                self.reset_bag()
-            piece_name = self.pop_bag()
+            if len(bag.bag) == 0:
+                bag.reset_bag()
+            piece_name = bag.pop_bag()
             shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(
                 4, 0), DeltaPosition(0, 0), Speed(0.5), Input(bindings))
    
-    def pop_bag(self):
-        return self.bag.pop()
-
-    def reset_bag(self):
-        random.shuffle(self.bag_inventory)
-        self.bag = self.bag_inventory.copy()
-
 
 class ScoreProcessor(esper.Processor):
     def process(self):

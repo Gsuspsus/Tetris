@@ -1,7 +1,7 @@
-bag system 
 next piece up display
 player entity with input
 piecespawner entity
 high score file
 piece color
 event to component transition
+constants to component transition
