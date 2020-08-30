@@ -48,6 +48,7 @@ class DrawScreenProcessor(esper.Processor):
 
 
 class InputMapperProcessor(esper.Processor):
+
     def process(self):
         for event in pygame.event.get():
             for ent, input in world.get_component(Input):
@@ -65,24 +66,32 @@ class InputMapperProcessor(esper.Processor):
 
 
 class InputProcessor(esper.Processor):
+    def __init__(self):
+        self.timeout_period = 250
+        self.ticks_since_last = 0
+
     def process(self):
-        for ent, (input, shape, grid_pos) in world.get_components(Input, Shape, GridPosition):
-            if 'QUIT' in input.actions:
-                pygame.quit()
-                sys.exit()
-            elif 'ROTATE' in input.actions:
-                shape.rotate_right()
+        if(pygame.time.get_ticks() - self.ticks_since_last) > self.timeout_period:
+            for ent, (input, shape, grid_pos) in world.get_components(Input, Shape, GridPosition):
+                if 'QUIT' in input.actions:
+                    pygame.quit()
+                    sys.exit()
+                elif 'ROTATE' in input.actions:
+                    shape.rotate_right()
+                    self.ticks_since_last = pygame.time.get_ticks()
 
-            elif 'MOVE_LEFT' in input.actions:
-                grid_pos.x -= 1
-                grid_pos.x = max(grid_pos.x, 0)
+                elif 'MOVE_LEFT' in input.actions:
+                    grid_pos.x -= 1
+                    grid_pos.x = max(grid_pos.x, 0)
+                    self.ticks_since_last = pygame.time.get_ticks()
+                elif 'MOVE_RIGHT' in input.actions:
+                    grid_pos.x += 1
+                    grid_pos.x = min(grid_pos.x, GRID_WIDTH-shape.get_width())
+                    self.ticks_since_last = pygame.time.get_ticks()
 
-            elif 'MOVE_RIGHT' in input.actions:
-                grid_pos.x += 1
-                grid_pos.x = min(grid_pos.x, GRID_WIDTH-shape.get_width())
-
-            elif 'MOVE_DOWN' in input.actions:
-                grid_pos.y += 1
+                elif 'MOVE_DOWN' in input.actions:
+                    grid_pos.y += 1
+                    self.ticks_since_last = pygame.time.get_ticks()
 
 
 class MovePieceProcessor(esper.Processor):
@@ -122,6 +131,7 @@ class LandPieceProcessor(esper.Processor):
                             grid[i][j] = 1
                 event_queue.add(SpawnNewPieceEvent())
                 world.delete_entity(ent)
+
 
 class SpawnPieceProcessor(esper.Processor):
     def process(self):
