@@ -36,10 +36,10 @@ class DrawScreenProcessor(esper.Processor):
             for j in range(GRID_WIDTH):
                 if(grid[i][j] != 0):
                     self.draw_block(j*TILE_WIDTH, INFO_AREA_HEIGHT+i*TILE_HEIGHT,
-                                    TILE_HEIGHT, TILE_WIDTH)
+                                    TILE_HEIGHT, TILE_WIDTH, (0,0,255))
 
-    def draw_block(self, x, y, height, width):
-        pygame.draw.rect(self.screen, (255, 0, 0), (x, y, width, height))
+    def draw_block(self, x, y, height, width,color=(255,0,0)):
+        pygame.draw.rect(self.screen, color, (x, y, width, height))
 
     def draw_grid_overlay(self):
         for i in range(GRID_HEIGHT):
@@ -98,7 +98,7 @@ class InputProcessor(esper.Processor):
                     blocked = False
                     for i in range(shape.get_height()):
                         for j in range(shape.get_width()):
-                            if grid[grid_pos.y+i][min(grid_pos.x+shape.get_width(), GRID_WIDTH)] != 0:
+                            if grid[grid_pos.y+i][min(grid_pos.x+shape.get_width(), GRID_WIDTH-1)] != 0:
                                 blocked = True
 
                     if not blocked:
@@ -153,7 +153,7 @@ class SpawnPieceProcessor(esper.Processor):
     def process(self):
         if event_queue.has_event(SpawnNewPieceEvent):
             piece_name = random.choice(list(shapes))
-            shape = world.create_entity(Shape(shapes["O"]), GridPosition(
+            shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(
                 4, 0), DeltaPosition(0, 0), Speed(0.5), Input(bindings))
 
 class ScoreProcessor(esper.Processor):
