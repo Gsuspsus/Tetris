@@ -50,6 +50,7 @@ class DrawScreenProcessor(esper.Processor):
     def draw_score(self):
        textsurface = self.font.render(str(score), False, (0, 255, 0))
        self.screen.blit(textsurface,(GAME_WINDOW_WIDTH//2-textsurface.get_width()//2,0))
+    
 class InputMapperProcessor(esper.Processor):
     def process(self):
         for event in pygame.event.get():

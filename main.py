@@ -20,7 +20,6 @@ world.add_processor(ClearLineProcessor(), priority=102)
 world.add_processor(ScoreProcessor(), priority=90)
 world.add_processor(GameOverProcessor(), priority=120)
 
-
 piece_name = random.choice(list(shapes))
 shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(4,0), DeltaPosition(0,0), Speed(0.5), Input(bindings))
 
