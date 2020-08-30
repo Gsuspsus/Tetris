@@ -49,3 +49,4 @@ class Rotation:
 class Speed:
     def __init__(self, amount):
         self.amount = amount
+    

@@ -45,7 +45,7 @@ class DrawScreenProcessor(esper.Processor):
         for i in range(GRID_HEIGHT):
             for j in range(GRID_WIDTH):
                 pygame.draw.rect(self.screen, (255, 255, 255),
-                                 (j*TILE_WIDTH, INFO_AREA_HEIGHT+i*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT), 2)
+                                 (j*TILE_WIDTH, INFO_AREA_HEIGHT+i*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT), 1)
 
     def draw_score(self):
        textsurface = self.font.render(str(score), False, (0, 255, 0))
@@ -151,11 +151,26 @@ class LandPieceProcessor(esper.Processor):
 
 
 class SpawnPieceProcessor(esper.Processor):
+    def __init__(self):
+        self.bag_inventory = list(shapes)
+        self.bag = self.bag_inventory.copy()
+
     def process(self):
         if event_queue.has_event(SpawnNewPieceEvent):
-            piece_name = random.choice(list(shapes))
+            if len(self.bag) == 0:
+                print("empty")
+                self.reset_bag()
+            piece_name = self.pop_bag()
             shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(
                 4, 0), DeltaPosition(0, 0), Speed(0.5), Input(bindings))
+   
+    def pop_bag(self):
+        return self.bag.pop()
+
+    def reset_bag(self):
+        random.shuffle(self.bag_inventory)
+        self.bag = self.bag_inventory.copy()
+
 
 class ScoreProcessor(esper.Processor):
     def process(self):
