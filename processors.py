@@ -69,9 +69,11 @@ class InputProcessor(esper.Processor):
 
             elif 'MOVE_LEFT' in input.actions:
                 grid_pos.x -= 1
+                grid_pos.x = max(grid_pos.x, 0)
                 
             elif 'MOVE_RIGHT' in input.actions:
                 grid_pos.x += 1
+                grid_pos.x = min(grid_pos.x, GRID_WIDTH-shape.get_width())
 
             elif 'MOVE_DOWN' in input.actions:
                 grid_pos.y +=1 
@@ -91,16 +93,6 @@ class CollisionDetectionProcessor(esper.Processor):
                 event_queue.add(BoundaryHitEvent(LEFT_BOUDNARY))
             elif grid_pos.x >= GRID_WIDTH:
                 event_queue.add(BoundaryHitEvent(RIGHT_BOUNDARY))
-
-class BuondaryConfinerProcessor(esper.Processor):
-    def process(self):
-        for ent, (grid_pos, shape) in world.get_components(GridPosition, Shape):
-            for boundary_event in event_queue.try_get_event(BoundaryHitEvent):
-                if boundary_event.side == LEFT_BOUDNARY:
-                    grid_pos.x = 0
-                else:
-                    grid_pos.x = GRID_WIDTH - shape.get_width()
-
 
 class LandPieceProcessor(esper.Processor):
     def process(self):
