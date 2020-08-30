@@ -1,5 +1,5 @@
 class Shape:
-    def __init__(self,rotations):
+    def __init__(self, rotations):
         self.rotations = rotations
         self.current_rotation = 0
         self.number_rotations = len(self.rotations)
@@ -23,24 +23,29 @@ class Shape:
         if self.current_rotation < 0:
             self.current_rotation = self.number_rotations-1
 
+
 class Input:
     def __init__(self, bindings):
         self.bindings = bindings
         self.actions = []
 
+
 class GridPosition:
-    def __init__(self, x,y):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
 
+
 class DeltaPosition:
-    def __init__(self, x,y):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
+
 
 class Rotation:
     def __init__(self, index):
         self.index = index
+
 
 class Speed:
     def __init__(self, amount):

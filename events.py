@@ -1,5 +1,6 @@
 class SpawnNewPieceEvent:
-    pass 
+    pass
+
 
 class BoundaryHitEvent:
     def __init__(self, side):

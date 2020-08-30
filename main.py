@@ -1,5 +1,5 @@
 import pygame
-import esper 
+import esper
 import random
 
 from components import *
@@ -20,7 +20,8 @@ world.add_processor(CollisionDetectionProcessor(), priority=96)
 
 
 piece_name = random.choice(list(shapes))
-shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(2,0), DeltaPosition(0,0), Speed(0.5), Input(bindings))
+shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(
+    2, 0), DeltaPosition(0, 0), Speed(0.5), Input(bindings))
 
 while True:
     event_queue.clear()
