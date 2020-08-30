@@ -9,7 +9,6 @@ from constants import FPS
 
 pygame.init()
 
-
 world.add_processor(DrawScreenProcessor(), priority=96)
 world.add_processor(InputMapperProcessor(), priority=100)
 world.add_processor(InputProcessor(), priority=99)
