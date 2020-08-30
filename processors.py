@@ -167,7 +167,14 @@ class SpawnPieceProcessor(esper.Processor):
             piece_name = bag.pop_bag()
             shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(
                 4, 0), DeltaPosition(0, 0), Speed(0.5), Input(bindings))
-   
+            
+class SaveScoreProcessor(esper.Processor):
+    def process(self):
+        if event_queue.has_event(SaveScoreEvent):
+            with open('score.txt', 'a') as f:
+                f.write(str(score) + "\n")
+            world.remove_processor(SaveScoreProcessor)
+            
 
 class ScoreProcessor(esper.Processor):
     def process(self):
@@ -207,3 +214,4 @@ class GameOverProcessor(esper.Processor):
         for i in range(GRID_WIDTH):
             if grid[0][i] != 0:
                 world.remove_processor(SpawnPieceProcessor)
+                event_queue.add(SaveScoreEvent())

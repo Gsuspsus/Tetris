@@ -1,4 +1,3 @@
-next piece up display
 player entity with input
 piecespawner entity
 high score file

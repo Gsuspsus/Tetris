@@ -8,3 +8,6 @@ class BoundaryHitEvent:
 
 class LineCleared:
     pass
+
+class SaveScoreEvent:
+    pass
