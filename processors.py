@@ -83,13 +83,28 @@ class InputProcessor(esper.Processor):
                     self.ticks_since_last = pygame.time.get_ticks()+50
 
                 elif 'MOVE_LEFT' in input.actions:
-                    grid_pos.x -= 1
-                    grid_pos.x = max(grid_pos.x, 0)
-                    self.ticks_since_last = pygame.time.get_ticks()
+                    blocked = False
+                    for i in range(shape.get_height()):
+                        for j in range(shape.get_width()):
+                            if grid[grid_pos.y+i][max(grid_pos.x-1,0)] != 0:
+                                blocked = True
+
+                    if not blocked:
+                        grid_pos.x -= 1
+                        grid_pos.x = max(grid_pos.x, 0)
+                        self.ticks_since_last = pygame.time.get_ticks()
+
                 elif 'MOVE_RIGHT' in input.actions:
-                    grid_pos.x += 1
-                    grid_pos.x = min(grid_pos.x, GRID_WIDTH-shape.get_width())
-                    self.ticks_since_last = pygame.time.get_ticks()
+                    blocked = False
+                    for i in range(shape.get_height()):
+                        for j in range(shape.get_width()):
+                            if grid[grid_pos.y+i][min(grid_pos.x+shape.get_width(), GRID_WIDTH)] != 0:
+                                blocked = True
+
+                    if not blocked:
+                        grid_pos.x += 1
+                        grid_pos.x = min(grid_pos.x, GRID_WIDTH-shape.get_width())
+                        self.ticks_since_last = pygame.time.get_ticks()
 
                 elif 'MOVE_DOWN' in input.actions:
                     grid_pos.y += 1
