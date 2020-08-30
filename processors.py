@@ -173,3 +173,9 @@ class ClearLineProcessor(esper.Processor):
         for i in range(len(above_rows)):
             for j in range(len(above_rows[0])):
                 grid[i+1][j] = above_rows[i][j]
+
+class GameOverProcessor(esper.Processor):
+    def process(self):
+        for i in range(GRID_WIDTH):
+            if grid[0][i] != 0:
+                world.remove_processor(SpawnPieceProcessor)

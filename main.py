@@ -18,6 +18,7 @@ world.add_processor(SpawnPieceProcessor(), priority=95)
 world.add_processor(CollisionDetectionProcessor(), priority=96)
 world.add_processor(ClearLineProcessor(), priority=102)
 world.add_processor(ScoreProcessor(), priority=90)
+world.add_processor(GameOverProcessor(), priority=120)
 
 
 piece_name = random.choice(list(shapes))
