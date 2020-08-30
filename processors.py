@@ -46,9 +46,7 @@ class DrawScreenProcessor(esper.Processor):
                 pygame.draw.rect(self.screen, (255, 255, 255),
                                  (j*TILE_WIDTH, i*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT), 2)
 
-
 class InputMapperProcessor(esper.Processor):
-
     def process(self):
         for event in pygame.event.get():
             for ent, input in world.get_component(Input):
@@ -67,7 +65,7 @@ class InputMapperProcessor(esper.Processor):
 
 class InputProcessor(esper.Processor):
     def __init__(self):
-        self.timeout_period = 250
+        self.timeout_period = 50
         self.ticks_since_last = 0
 
     def process(self):
@@ -139,3 +137,27 @@ class SpawnPieceProcessor(esper.Processor):
             piece_name = random.choice(list(shapes))
             shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(
                 4, 0), DeltaPosition(0, 0), Speed(0.5), Input(bindings))
+
+class ClearLineProcessor(esper.Processor):
+    def process(self):
+        line = None
+        for i in range(GRID_HEIGHT):
+            if grid[i][0] == 0:
+                continue
+            else:
+                for j in range(GRID_WIDTH):
+                    if grid[i][j] == 0:
+                        break
+                    elif j == GRID_WIDTH-1:
+                        line = i
+
+        if line is not None:
+            above_rows = [[0] * GRID_WIDTH for n in range(line)] 
+            for i in range(line):
+                for j in range(GRID_WIDTH):
+                    above_rows[i][j] = grid[i][j]
+                
+            for i in range(len(above_rows)):
+                for j in range(len(above_rows[0])):
+                    grid[i+1][j] = above_rows[i][j]
+
