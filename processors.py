@@ -65,7 +65,7 @@ class InputMapperProcessor(esper.Processor):
 
 class InputProcessor(esper.Processor):
     def __init__(self):
-        self.timeout_period = 50
+        self.timeout_period = 125
         self.ticks_since_last = 0
 
     def process(self):
@@ -76,7 +76,7 @@ class InputProcessor(esper.Processor):
                     sys.exit()
                 elif 'ROTATE' in input.actions:
                     shape.rotate_right()
-                    self.ticks_since_last = pygame.time.get_ticks()
+                    self.ticks_since_last = pygame.time.get_ticks()+50
 
                 elif 'MOVE_LEFT' in input.actions:
                     grid_pos.x -= 1
@@ -109,7 +109,6 @@ class CollisionDetectionProcessor(esper.Processor):
             elif grid_pos.x >= GRID_WIDTH:
                 event_queue.add(BoundaryHitEvent(RIGHT_BOUNDARY))
 
-
 class LandPieceProcessor(esper.Processor):
     def process(self):
         hit = False
@@ -135,7 +134,7 @@ class SpawnPieceProcessor(esper.Processor):
     def process(self):
         if event_queue.has_event(SpawnNewPieceEvent):
             piece_name = random.choice(list(shapes))
-            shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(
+            shape = world.create_entity(Shape(shapes["O"]), GridPosition(
                 4, 0), DeltaPosition(0, 0), Speed(0.5), Input(bindings))
 
 class ClearLineProcessor(esper.Processor):
@@ -152,12 +151,14 @@ class ClearLineProcessor(esper.Processor):
                         line = i
 
         if line is not None:
-            above_rows = [[0] * GRID_WIDTH for n in range(line)] 
-            for i in range(line):
-                for j in range(GRID_WIDTH):
-                    above_rows[i][j] = grid[i][j]
-                
-            for i in range(len(above_rows)):
-                for j in range(len(above_rows[0])):
-                    grid[i+1][j] = above_rows[i][j]
+            self.move_lines_down(line)
 
+    def move_lines_down(self, target_line):
+        above_rows = [[0] * GRID_WIDTH for n in range(target_line)] 
+        for i in range(target_line):
+            for j in range(GRID_WIDTH):
+                above_rows[i][j] = grid[i][j]
+            
+        for i in range(len(above_rows)):
+            for j in range(len(above_rows[0])):
+                grid[i+1][j] = above_rows[i][j]
