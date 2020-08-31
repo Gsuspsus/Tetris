@@ -163,18 +163,21 @@ class LandPieceProcessor(esper.Processor):
                     for j in range(grid_pos.x, grid_pos.x + shape.get_width()):
                         if shape.get_current_rotation()[i-grid_pos.y][j-grid_pos.x] != 0:
                             grid[i][j] = 1
-                event_queue.add(SpawnNewPieceEvent())
                 world.delete_entity(ent)
-
+                spawner = world.component_for_entity(entities_map['spawner'], PieceContainer)
+                spawner.current = spawner.pop()
 
 class SpawnPieceProcessor(esper.Processor):
     def process(self):
-        if event_queue.has_event(SpawnNewPieceEvent):
-            if len(bag.bag) == 0:
-                bag.reset_bag()
-            piece_name = bag.pop_bag()
-            shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(
-                4, 0), DeltaPosition(0, 0), Speed(0.5), Input(bindings))
+        for ent, container in world.get_component(PieceContainer):
+            if container.current != None:
+                if container.remainig_length == 0:
+                    container.bag.reset_bag()
+                piece_name = container.current
+                shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(
+                    4, 0), DeltaPosition(0, 0), Speed(0.5), Input(bindings))
+                container.current = None
+
             
 class SaveScoreProcessor(esper.Processor):
     def process(self):

@@ -1,3 +1,6 @@
+import random 
+from constants import Bag
+
 class Shape:
     def __init__(self, rotations):
         self.rotations = rotations
@@ -49,4 +52,27 @@ class Rotation:
 class Speed:
     def __init__(self, amount):
         self.amount = amount
-    
+
+class PieceContainer:
+    def __init__(self, shapes):
+        self.bag_inventory = list(shapes)
+        self.bag = self.bag_inventory.copy()
+        self.current = self.bag.pop() 
+
+    def pop(self):
+        if self.remainig_length() == 0:
+            self.reset()
+        return self.bag.pop()
+
+    def reset(self):
+        random.shuffle(self.bag_inventory)
+        self.bag = self.bag_inventory.copy()
+
+    def next(self):
+        if(len(self.bag)) == 0:
+            self.reset_bag()
+        
+        return self.bag[-1]
+
+    def remainig_length(self):
+        return len(self.bag)

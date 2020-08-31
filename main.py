@@ -22,7 +22,8 @@ world.add_processor(GameOverProcessor(), priority=120)
 world.add_processor(SaveScoreProcessor(), priority=8)
 world.add_processor(EventMapperProcessor(), priority=103)
 
-player = world.create_entity(Input(bindings))
+entities_map['player'] = world.create_entity(Input(bindings))
+entities_map['spawner'] = world.create_entity(PieceContainer(shape))
 
 while True:
     event_queue.clear()
