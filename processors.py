@@ -53,7 +53,8 @@ class DrawScreenProcessor(esper.Processor):
        self.screen.blit(textsurface,(GAME_WINDOW_WIDTH//2-textsurface.get_width()//2,0))
 
     def draw_next_up(self):
-        shape = Shape(shapes[bag.next()])
+        spawner = world.component_for_entity(entities_map['spawner'], PieceContainer)
+        shape = Shape(shapes[spawner.next()])
         for i in range(shape.get_height()):
             for j in range(shape.get_width()):
                 if shape.get_current_rotation()[i][j] == 1:

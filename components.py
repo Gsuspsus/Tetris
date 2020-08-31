@@ -1,5 +1,4 @@
 import random 
-from constants import Bag
 
 class Shape:
     def __init__(self, rotations):

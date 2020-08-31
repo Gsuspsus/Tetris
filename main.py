@@ -5,7 +5,7 @@ import random
 from components import *
 from processors import *
 from world import world
-from constants import FPS
+from constants import FPS, shapes
 
 pygame.init()
 
@@ -23,7 +23,7 @@ world.add_processor(SaveScoreProcessor(), priority=8)
 world.add_processor(EventMapperProcessor(), priority=103)
 
 entities_map['player'] = world.create_entity(Input(bindings))
-entities_map['spawner'] = world.create_entity(PieceContainer(shape))
+entities_map['spawner'] = world.create_entity(PieceContainer(shapes))
 
 while True:
     event_queue.clear()
