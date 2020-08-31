@@ -24,9 +24,6 @@ world.add_processor(EventMapperProcessor(), priority=103)
 
 player = world.create_entity(Input(bindings))
 
-piece_name = random.choice(list(shapes))
-shape = world.create_entity(Shape(shapes[piece_name]), GridPosition(4,0), DeltaPosition(0,0), Speed(0.5))
-
 while True:
     event_queue.clear()
     world.process()

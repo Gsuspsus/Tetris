@@ -93,11 +93,11 @@ class InputProcessor(esper.Processor):
 
     def process(self):
         if(pygame.time.get_ticks() - self.ticks_since_last) > self.timeout_period:
+            if event_queue.has_event(QuitGameEvent):
+                pygame.quit()
+                sys.exit()
             for ent, (shape, grid_pos) in world.get_components(Shape, GridPosition):
-                if event_queue.has_event(QuitGameEvent):
-                    pygame.quit()
-                    sys.exit()
-                elif event_queue.has_event(RotatePieceEvent):
+                if event_queue.has_event(RotatePieceEvent):
                     shape.rotate_right()
                     self.ticks_since_last = pygame.time.get_ticks()+50
                 elif event_queue.has_event(MovePieceLeftEvent):
