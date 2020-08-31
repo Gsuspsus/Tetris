@@ -1,7 +1,8 @@
 import esper
+import pygame
 import random
 import sys
-import pygame
+from datetime import datetime
 
 from world import world
 from constants import *
@@ -29,7 +30,7 @@ class DrawScreenProcessor(esper.Processor):
             for j in range(shape.get_width()):
                 if shape.get_current_rotation()[i][j] == 1:
                     self.draw_block(
-                        x*TILE_WIDTH+j*TILE_WIDTH, INFO_AREA_HEIGHT+y*TILE_HEIGHT+i*TILE_HEIGHT, TILE_HEIGHT, TILE_WIDTH)
+                        x*TILE_WIDTH+j*TILE_WIDTH, INFO_AREA_HEIGHT+y*TILE_HEIGHT+i*TILE_HEIGHT, TILE_HEIGHT, TILE_WIDTH, random.choice(list(COLORS.values())))
 
     def draw_grid(self):
         for i in range(GRID_HEIGHT):
@@ -172,7 +173,8 @@ class SaveScoreProcessor(esper.Processor):
     def process(self):
         if event_queue.has_event(SaveScoreEvent):
             with open('score.txt', 'a') as f:
-                f.write(str(score) + "\n")
+                date = datetime.now().strftime("(%d/%m/%Y %H:%M:%S)")
+                f.write(date + " : " + str(score) + "\n")
             world.remove_processor(SaveScoreProcessor)
             
 

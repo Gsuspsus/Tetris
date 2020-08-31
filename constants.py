@@ -23,6 +23,14 @@ TILE_HEIGHT = int(GAME_WINDOW_HEIGHT/GRID_HEIGHT)
 LEFT_BOUDNARY = 0
 RIGHT_BOUNDARY = 1
 
+COLORS = {
+    'T' : (100, 65, 175),
+    'O' : (255, 213, 0),
+    'I' : (3, 65, 174),
+    'S' : (114, 203, 59),
+    'Z' : (255, 50, 19),
+}
+
 event_queue = EventQueue()
 clock = pygame.time.Clock()
 grid = [[0] * GRID_WIDTH for n in range(GRID_HEIGHT)]
