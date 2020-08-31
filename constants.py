@@ -2,6 +2,7 @@ import random
 import pygame 
 import json 
 from event_queue import EventQueue
+from events import *
 
 FPS = 60 
 
@@ -66,3 +67,11 @@ bindings = {
         'd' : "MOVE_RIGHT",
         's' : 'MOVE_DOWN'
     }
+
+events_map = {
+    'QUIT' : QuitGameEvent(),
+    'ROTATE' : RotatePieceEvent(),
+    'MOVE_DOWN' : MovePieceDownEvent(),
+    'MOVE_LEFT' : MovePieceLeftEvent(),
+    'MOVE_RIGHT' : MovePieceRightEvent()
+}

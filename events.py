@@ -11,3 +11,18 @@ class LineCleared:
 
 class SaveScoreEvent:
     pass
+
+class QuitGameEvent:
+    pass
+
+class RotatePieceEvent:
+    pass
+
+class MovePieceDownEvent:
+    pass
+
+class MovePieceLeftEvent:
+    pass
+
+class MovePieceRightEvent:
+    pass

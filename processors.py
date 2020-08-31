@@ -77,6 +77,14 @@ class InputMapperProcessor(esper.Processor):
     def lookup_binding(self, bindings, key, default=None):
         return bindings.get(pygame.key.name(key), default)
 
+class EventMapperProcessor(esper.Processor):
+    def process(self):
+        for ent, input in world.get_component(Input):
+            for action in input.actions:
+                event = events_map.get(action, None)
+                if event is not None:
+                    event_queue.add(event)
+
 
 class InputProcessor(esper.Processor):
     def __init__(self):
@@ -85,15 +93,14 @@ class InputProcessor(esper.Processor):
 
     def process(self):
         if(pygame.time.get_ticks() - self.ticks_since_last) > self.timeout_period:
-            for ent, (input, shape, grid_pos) in world.get_components(Input, Shape, GridPosition):
-                if 'QUIT' in input.actions:
+            for ent, (shape, grid_pos) in world.get_components(Shape, GridPosition):
+                if event_queue.has_event(QuitGameEvent):
                     pygame.quit()
                     sys.exit()
-                elif 'ROTATE' in input.actions:
+                elif event_queue.has_event(RotatePieceEvent):
                     shape.rotate_right()
                     self.ticks_since_last = pygame.time.get_ticks()+50
-
-                elif 'MOVE_LEFT' in input.actions:
+                elif event_queue.has_event(MovePieceLeftEvent):
                     blocked = False
                     for i in range(shape.get_height()):
                         for j in range(shape.get_width()):
@@ -105,7 +112,7 @@ class InputProcessor(esper.Processor):
                         grid_pos.x = max(grid_pos.x, 0)
                         self.ticks_since_last = pygame.time.get_ticks()
 
-                elif 'MOVE_RIGHT' in input.actions:
+                elif event_queue.has_event(MovePieceRightEvent):
                     blocked = False
                     for i in range(shape.get_height()):
                         for j in range(shape.get_width()):
@@ -117,7 +124,7 @@ class InputProcessor(esper.Processor):
                         grid_pos.x = min(grid_pos.x, GRID_WIDTH-shape.get_width())
                         self.ticks_since_last = pygame.time.get_ticks()
 
-                elif 'MOVE_DOWN' in input.actions:
+                elif event_queue.has_event(MovePieceDownEvent):
                     grid_pos.y += 1
                     self.ticks_since_last = pygame.time.get_ticks()
 
